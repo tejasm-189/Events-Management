@@ -5,8 +5,8 @@
 ## Usage: adminer
 ## Example: "ddev adminer"
 
-DDEV_ADMINER_PORT=9100
-DDEV_ADMINER_HTTPS_PORT=9101
+DDEV_ADMINER_PORT=9103
+DDEV_ADMINER_HTTPS_PORT=9104
 
 if [ ${DDEV_PRIMARY_URL%://*} = "http" ] || [ -n "${GITPOD_WORKSPACE_ID:-}" ] || [ "${CODESPACES:-}" = "true" ]; then
     ddev launch :$DDEV_ADMINER_PORT
