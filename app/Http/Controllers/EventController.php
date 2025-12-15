@@ -13,10 +13,32 @@ class EventController extends Controller
      */
     public function index()
     {
-        //
+        $relations = [];
+
+        if ($this->shouldIncludeRelation('user')) {
+            $relations[] = 'user';
+        }
+
+        if ($this->shouldIncludeRelation('attendees')) {
+            $relations[] = 'attendees.user';
+        }
+
         return EventResource::collection(
-            Event::with('user')->paginate()
+            Event::with($relations)->paginate()
         );
+    }
+
+    protected function shouldIncludeRelation(string $relation): bool
+    {
+        $include = request()->query('include');
+
+        if (!$include) {
+            return false;
+        }
+
+        $relations = explode(',', $include);
+
+        return in_array($relation, $relations);
     }
 
     /**
@@ -52,8 +74,14 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        //
-        $event->load('user', 'attendees.user');
+        if ($this->shouldIncludeRelation('user')) {
+            $event->load('user');
+        }
+
+        if ($this->shouldIncludeRelation('attendees')) {
+            $event->load('attendees.user');
+        }
+
         return new EventResource($event);
     }
 
