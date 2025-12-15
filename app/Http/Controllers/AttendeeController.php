@@ -45,16 +45,20 @@ class AttendeeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Attendee $attendee)
     {
         //
+        $attendee->update($request->all());
+        return new AttendeeResource($attendee);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Attendee $attendee)
     {
         //
+        $attendee->delete();
+        return response(status: 204);
     }
 }
