@@ -14,7 +14,7 @@ class EventController extends Controller
     public function index()
     {
         //
-        return EventResource::collection(Event::all());
+        return EventResource::collection(Event::with('user', 'attendees.user')->get());
     }
 
     /**
@@ -39,6 +39,9 @@ class EventController extends Controller
             ]),
             ['user_id' => 1]
         ));
+
+        $event->load('user', 'attendees.user');
+
         return new EventResource($event);
     }
 
@@ -48,6 +51,7 @@ class EventController extends Controller
     public function show(Event $event)
     {
         //
+        $event->load('user', 'attendees.user');
         return new EventResource($event);
     }
 
@@ -64,6 +68,8 @@ class EventController extends Controller
         ]);
 
         $event->update($validated);
+
+        $event->load('user', 'attendees.user');
 
         return new EventResource($event);
     }
