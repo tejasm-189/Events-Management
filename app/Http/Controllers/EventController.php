@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Event;
 
 class EventController extends Controller
 {
@@ -12,6 +13,7 @@ class EventController extends Controller
     public function index()
     {
         //
+        return Event::all();
     }
 
     /**
@@ -20,6 +22,23 @@ class EventController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after:start_time',
+        ]);
+
+        $event = Event::create(array_merge(
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'start_time' => 'required|date',
+                'end_time' => 'required|date|after:start_time',
+            ]),
+            ['user_id' => 1]
+        ));
+        return $event;
     }
 
     /**
