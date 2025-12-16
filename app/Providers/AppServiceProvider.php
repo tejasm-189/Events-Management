@@ -19,6 +19,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \Illuminate\Support\Facades\Gate::define('update-event', function ($user, $event) {
+            return $user->id === $event->user_id;
+        });
+
+        \Illuminate\Support\Facades\Gate::define('delete-event', function ($user, $event) {
+            return $user->id === $event->user_id;
+        });
     }
 }
