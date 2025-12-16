@@ -9,6 +9,8 @@ use App\Models\Attendee;
 
 use App\Http\Traits\CanLoadRelationships;
 
+use Illuminate\Support\Facades\Gate;
+
 class AttendeeController extends Controller
 {
     use CanLoadRelationships;
@@ -34,13 +36,13 @@ class AttendeeController extends Controller
      */
     public function store(Request $request, Event $event)
     {
-        $attendee = $event->attendees()->create([
-            'user_id' => 1
-        ]);
-
-        return new AttendeeResource(
-            $this->loadRelationships($attendee)
+        $attendee = $this->loadRelationships(
+            $event->attendees()->create([
+                'user_id' => $request->user()->id
+            ])
         );
+
+        return new AttendeeResource($attendee);
     }
 
     /**
@@ -56,7 +58,11 @@ class AttendeeController extends Controller
 
     public function update(Request $request, Event $event, Attendee $attendee)
     {
-        $attendee->update($request->all());
+        Gate::authorize('update', $attendee);
+
+        $attendee->update($request->validate([
+            'user_id' => 'sometimes|integer|exists:users,id'
+        ]));
 
         return new AttendeeResource(
             $this->loadRelationships($attendee)
@@ -68,6 +74,8 @@ class AttendeeController extends Controller
      */
     public function destroy(Event $event, Attendee $attendee)
     {
+        Gate::authorize('delete', $attendee);
+
         $attendee->delete();
         return response(status: 204);
     }

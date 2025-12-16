@@ -66,7 +66,7 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        Gate::authorize('update-event', $event);
+        Gate::authorize('update', $event);
 
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
@@ -85,7 +85,7 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        Gate::authorize('delete-event', $event);
+        Gate::authorize('delete', $event);
 
         $event->delete();
         return response(status: 204);
