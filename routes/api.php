@@ -12,8 +12,9 @@ Route::get('/user', function (Request $request) {
 use App\Http\Controllers\Api\AuthController;
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-
-Route::apiResource('events', EventController::class);
-Route::apiResource('events.attendees', AttendeeController::class)
-    ->scoped()->except(['update']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::apiResource('events', EventController::class);
+    Route::apiResource('events.attendees', AttendeeController::class)
+        ->scoped()->except(['update']);
+});
