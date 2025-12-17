@@ -6,13 +6,19 @@
         <h1 style="margin: 0; font-size: 2rem;">Dashboard</h1>
         <p style="color: var(--text-muted); margin-top: 0.5rem;">Manage your upcoming events</p>
     </div>
-    <button class="btn btn-primary" onclick="alert('Feature coming soon: Create Modal')">
+    <a href="{{ route('events.create') }}" class="btn btn-primary">
         + New Event
-    </button>
+    </a>
 </div>
 
 <div id="events-grid" class="grid">
     <!-- Events will be loaded here -->
     <div class="card loading">Loading events...</div>
 </div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+    window.PAGE_CONTEXT = 'dashboard';
+</script>
 @endsection
